@@ -1,3 +1,10 @@
+'''
+@Description: Description
+@Author: hayato
+@Date: 2020-07-19 20:34:00
+@LastEditors: hayato
+@LastEditTime: 2020-07-19 22:57:13
+'''
 """moerank URL Configuration
 
 The `urlpatterns` list routes URLs to views. For more information please see:
@@ -15,7 +22,11 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path
+from django.conf.urls import include, url
+from rest_framework import routers
+router = routers.DefaultRouter()
 
 urlpatterns = [
     path('admin/', admin.site.urls),
+    path(r'', include('moerank.common.urls'))
 ]
