@@ -12,6 +12,7 @@ env/
 .vscode/
 moerank/settings.py
 
+qiniu/
 
 # vim ignore
 # Swap
