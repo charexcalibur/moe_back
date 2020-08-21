@@ -28,5 +28,5 @@ router = routers.DefaultRouter()
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path(r'', include('moerank.common.urls'))
+    path(r'api', include('moerank.common.urls'))
 ]

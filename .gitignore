@@ -12,6 +12,8 @@ env/
 .vscode/
 moerank/settings.py
 
+static/
+
 qiniu/
 qiniu.json
 # vim ignore
