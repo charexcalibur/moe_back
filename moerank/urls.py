@@ -27,6 +27,6 @@ from rest_framework import routers
 router = routers.DefaultRouter()
 
 urlpatterns = [
-    path('admin/', admin.site.urls),
-    path(r'api', include('moerank.common.urls'))
+    path(r'admin', admin.site.urls),
+    path(r'api/', include('moerank.common.urls'))
 ]
