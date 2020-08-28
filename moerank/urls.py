@@ -28,5 +28,6 @@ router = routers.DefaultRouter()
 
 urlpatterns = [
     path(r'admin', admin.site.urls),
-    path(r'api/', include('moerank.common.urls'))
+    path(r'api/', include('moerank.common.urls')),
+    path('api-auth/', include('rest_framework.urls')),
 ]
