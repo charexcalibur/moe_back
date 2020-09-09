@@ -6,7 +6,7 @@
 @LastEditTime: 2020-07-20 17:01:03
 '''
 from django.urls import path, include
-from moerank.common.views.user import UserViewSet, SocialMediaViewSet, CoserNoPicViewSet, CoserInfoSViewSet, CoserSocialMediaSViewSet
+from moerank.common.views.user import UserViewSet, SocialMediaViewSet, CoserNoPicViewSet, CoserInfoSViewSet, CoserSocialMediaSViewSet, login
 from rest_framework import routers
 
 router = routers.DefaultRouter()
@@ -17,5 +17,6 @@ router.register(r'coserinfo', CoserInfoSViewSet)
 router.register(r'coserSocialMedia', CoserSocialMediaSViewSet)
 
 urlpatterns = [
-    path(r'', include(router.urls))
+    path(r'', include(router.urls)),
+    path('login', login)
 ]

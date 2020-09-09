@@ -9,6 +9,15 @@ from ..models import UserProfile, SocialMedia, CoserNoPic, CoserInfo, CoserSocia
 from rest_framework.views import APIView
 from rest_framework.viewsets import ModelViewSet
 from ..serializers.user import UserProfileSerializer, SocialMediaSerializer, CoserNoPicSerializer, CoserInfoSerializer, CoserSocialMediaSerializer
+from django.contrib.auth import authenticate
+from django.contrib.auth import login as django_login
+from django.contrib.auth import logout as django_logout
+from rest_framework.authtoken.models import Token
+from django.http import HttpResponse, JsonResponse
+from django.views.decorators.csrf import csrf_exempt
+from django.contrib.auth import get_user_model
+
+User = get_user_model()
 
 class UserViewSet(ModelViewSet):
     queryset = UserProfile.objects.all()
@@ -29,3 +38,51 @@ class CoserInfoSViewSet(ModelViewSet):
 class CoserSocialMediaSViewSet(ModelViewSet):
     queryset = CoserSocialMedia.objects.all()
     serializer_class = CoserSocialMediaSerializer
+
+@csrf_exempt
+def login(request):
+    request_method = request.method
+    print('request_method: ', request_method)
+    if request_method != 'POST':
+        ret = {
+            'error_no': '1001',
+            'msg': 'only POST method is allowed'
+        }
+        return JsonResponse(ret, status=200, safe=False)
+    
+    user_name = request.POST.get('username', None)
+    print('request.POST: ', request.POST)
+    print('user_name: ', user_name)
+    if not user_name:
+        ret = {
+            'error_no': '1002',
+            'msg': 'username is required'
+        }
+        return JsonResponse(ret, status=200, safe=False)
+
+    pwd = request.POST.get('password', None)
+    print('pwd: ', pwd)
+    if not pwd:
+        ret = {
+            'error_no': '1003',
+            'msg': 'password is required'
+        }
+        return JsonResponse(ret, status=200, safe=False)
+
+    user = authenticate(request, username=user_name, password=pwd)
+    print(user.username)
+    if user:
+        django_login(request, user)
+        token = Token.objects.get_or_create(user=user)[0]
+        print('token: ', token)
+        ret = {
+            'error_no': '1004',
+            'msg': 'succeed'
+        }
+        return JsonResponse(ret, status=200, safe=False)
+    else:
+        ret = {
+            'error_no': '1005',
+            'msg': 'username or password is invaild'
+        }
+        return JsonResponse(ret, status=200, safe=False)        
