@@ -16,6 +16,7 @@ from rest_framework.authtoken.models import Token
 from django.http import HttpResponse, JsonResponse
 from django.views.decorators.csrf import csrf_exempt
 from django.contrib.auth import get_user_model
+import json
 
 User = get_user_model()
 
@@ -50,9 +51,11 @@ def login(request):
         }
         return JsonResponse(ret, status=200, safe=False)
     
-    user_name = request.POST.get('username', None)
-    print('request.POST: ', request.POST)
-    print('user_name: ', user_name)
+    # user_name = request.POST.get('username', None)
+    # print('request.POST: ', request.body.username)
+    request_data = json.loads(request.body)
+    print('request_data: ', request_data)
+    user_name = request_data.get('username', None)
     if not user_name:
         ret = {
             'error_no': '1002',
@@ -60,7 +63,7 @@ def login(request):
         }
         return JsonResponse(ret, status=200, safe=False)
 
-    pwd = request.POST.get('password', None)
+    pwd = request_data.get('password', None)
     print('pwd: ', pwd)
     if not pwd:
         ret = {
@@ -74,10 +77,10 @@ def login(request):
     if user:
         django_login(request, user)
         token = Token.objects.get_or_create(user=user)[0]
-        print('token: ', token)
         ret = {
             'error_no': '1004',
-            'msg': 'succeed'
+            'msg': 'succeed',
+            'token:': str(token)
         }
         return JsonResponse(ret, status=200, safe=False)
     else:
