@@ -95,7 +95,7 @@ def login(request):
         ret = {
             'error_no': '1004',
             'msg': 'succeed',
-            'token:': str(token)
+            'token': str(token)
         }
         return JsonResponse(ret, status=200, safe=False)
     else:
