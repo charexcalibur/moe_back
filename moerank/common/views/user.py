@@ -8,7 +8,7 @@
 from ..models import UserProfile, SocialMedia, CoserNoPic, CoserInfo, CoserSocialMedia
 from rest_framework.views import APIView
 from rest_framework.viewsets import ModelViewSet
-from ..serializers.user import UserProfileSerializer, SocialMediaSerializer, CoserNoPicSerializer, CoserInfoSerializer, CoserSocialMediaSerializer
+from ..serializers.user import UserProfileSerializer, SocialMediaSerializer, CoserNoPicSerializer, CoserInfoSerializer, CoserSocialMediaSerializer, CurrentUserSerializer
 from django.contrib.auth import authenticate
 from django.contrib.auth import login as django_login
 from django.contrib.auth import logout as django_logout
@@ -17,12 +17,27 @@ from django.http import HttpResponse, JsonResponse
 from django.views.decorators.csrf import csrf_exempt
 from django.contrib.auth import get_user_model
 import json
+from rest_framework.response import Response
 
 User = get_user_model()
 
 class UserViewSet(ModelViewSet):
     queryset = UserProfile.objects.all()
     serializer_class = UserProfileSerializer
+
+class CurrentUserViewSet(ModelViewSet):
+    queryset = UserProfile.objects.all()
+    serializer_class = CurrentUserSerializer
+
+    def list(self, request):
+        current_user = CurrentUserSerializer(request.user)
+        print('current_user: ', current_user)
+        res = {
+            'result': current_user.data
+        }
+        return Response(res)
+
+
 
 class SocialMediaViewSet(ModelViewSet):
     queryset = SocialMedia.objects.all()

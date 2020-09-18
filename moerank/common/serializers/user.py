@@ -13,6 +13,11 @@ class UserProfileSerializer(serializers.ModelSerializer):
         model = UserProfile
         fields = "__all__"
 
+class CurrentUserSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = UserProfile
+        fields = ['username']
+
 class SocialMediaSerializer(serializers.ModelSerializer):
     class Meta:
         model = SocialMedia
