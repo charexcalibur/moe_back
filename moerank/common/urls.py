@@ -7,6 +7,7 @@
 '''
 from django.urls import path, include
 from moerank.common.views.user import UserViewSet, SocialMediaViewSet, CoserNoPicViewSet, CoserInfoSViewSet, CoserSocialMediaSViewSet, login, CurrentUserViewSet
+from moerank.common.views.analysis import GetBlogAnalysisViewSet
 from rest_framework import routers
 
 router = routers.DefaultRouter()
@@ -20,4 +21,5 @@ router.register(r'currentUser', CurrentUserViewSet)
 urlpatterns = [
     path(r'', include(router.urls)),
     path('login', login),
+    path('getBlogAnalysis', GetBlogAnalysisViewSet.as_view({'get': 'list'}))
 ]
