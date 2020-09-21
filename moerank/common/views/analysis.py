@@ -15,7 +15,7 @@ class GetBlogAnalysisViewSet(ModelViewSet):
             request_res = []
         print('res: ', request_res)
         res = {
-            'error_no': '10001',
+            'error_no': '60001',
             'msg': 'ok',
             'result': ''
         }
