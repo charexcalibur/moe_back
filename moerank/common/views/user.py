@@ -88,7 +88,6 @@ def login(request):
         return JsonResponse(ret, status=200, safe=False)
 
     user = authenticate(request, username=user_name, password=pwd)
-    print(user.username)
     if user:
         django_login(request, user)
         token = Token.objects.get_or_create(user=user)[0]
