@@ -6,17 +6,41 @@ import requests
 class GetBlogAnalysisViewSet(ModelViewSet):
 
     def list(self, request):
-        # cache.set('123', '321', timeout=7200)
-        # cache_query = cache.get('123')
-        try:
-            r = requests.get('https://www.axis-studio.org/content.json')
-            request_res = r.json()
-        except:
-            request_res = []
-        print('res: ', request_res)
-        res = {
-            'error_no': '60001',
-            'msg': 'ok',
-            'result': ''
-        }
-        return Response(res)
+        blog_analysis = cache.get('blog_analysis')
+        if not blog_analysis:
+            try:
+                r = requests.get('https://www.axis-studio.org/content.json')
+                request_res = r.json()
+            except:
+                request_res = []
+            
+            if not request_res:
+                res = {
+                    'error_no': '60001',
+                    'msg': 'no result',
+                    'result': request_res
+                }
+                return Response(res)
+
+
+            cache.set('blog_analysis', request_res, 7200)
+
+            res = {
+                'error_no': '60002',
+                'msg': 'succeed',
+                'result': {
+                    'total_blog_count': len(request_res)
+                }
+            }
+
+            return Response(res)
+        else:
+            res = {
+                'error_no': '60002',
+                'msg': 'succeed',
+                'result': {
+                    'total_blog_count': len(blog_analysis)
+                }
+            }
+
+            return Response(res)            
