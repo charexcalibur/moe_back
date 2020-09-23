@@ -13,7 +13,7 @@ env/
 moerank/settings.py
 
 static/
-
+moerank/fhc/data/*
 qiniu/
 qiniu.json
 # vim ignore
