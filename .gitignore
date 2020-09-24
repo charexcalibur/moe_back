@@ -11,7 +11,7 @@ node_modules
 env/
 .vscode/
 moerank/settings.py
-
+init_fhc.py
 static/
 moerank/fhc/data/*
 qiniu/
