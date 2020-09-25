@@ -95,3 +95,18 @@ class Permission(models.Model):
         verbose_name = '权限'
         verbose_name_plural = verbose_name
         ordering = ['id']
+
+class Role(models.Model):
+    """
+    角色
+    """
+    name = models.CharField(max_length=32, unique=True, verbose_name="角色")
+    permissions = models.ManyToManyField("Permission", blank=True, verbose_name="权限")
+    desc = models.CharField(max_length=50, blank=True, null=True, verbose_name="描述")
+
+    class Meta:
+        verbose_name = "角色"
+        verbose_name_plural = verbose_name
+
+    def __str__(self):
+        return self.name

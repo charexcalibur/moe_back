@@ -9,6 +9,7 @@ from django.urls import path, include
 from moerank.common.views.user import UserViewSet, SocialMediaViewSet, CoserNoPicViewSet, CoserInfoSViewSet, CoserSocialMediaSViewSet, login, CurrentUserViewSet
 from moerank.common.views.analysis import GetBlogAnalysisViewSet
 from moerank.common.views.permission import PermissionViewSet
+from moerank.common.views.role import RoleViewSet
 from rest_framework import routers
 
 router = routers.DefaultRouter()
@@ -19,6 +20,7 @@ router.register(r'coserinfo', CoserInfoSViewSet)
 router.register(r'coserSocialMedia', CoserSocialMediaSViewSet)
 router.register(r'currentUser', CurrentUserViewSet, basename='currentUser')
 router.register(r'permissions', PermissionViewSet)
+router.register(r'roles', RoleViewSet)
 
 urlpatterns = [
     path(r'', include(router.urls)),
