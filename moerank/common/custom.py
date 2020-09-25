@@ -3,6 +3,7 @@ from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from rest_framework.pagination import PageNumberPagination
 from rest_framework import serializers
+from rest_framework.permissions import BasePermission
 
 class TreeSerializer(serializers.Serializer):
     id = serializers.IntegerField()
@@ -46,3 +47,33 @@ class CommonPagination(PageNumberPagination):
     '''
     page_size = 10
     page_size_query_param = 'limit'
+
+class RbacPermission(BasePermission):
+    '''
+    自定义权限
+    '''
+
+    @classmethod
+    def get_permission_from_role(self, request):
+        try:
+            perms = request.user.roles.values(
+                'permissions__method',
+            ).distinct()
+            return [p['permissions__method'] for p in perms]
+        except AttributeError:
+            return None
+
+    def has_permission(self, request, view):
+        perms = self.get_permission_from_role(request)
+        if perms:
+            if 'admin' in perms:
+                return True
+            elif not hasattr(view, 'perms_map'):
+                return False
+            else:
+                perms_map = view.perms_map
+                _method = request._request.method.lower()
+                for i in perms_map:
+                    for method, alias in i.items():
+                        if (_method == method or method == '*') and alias in perms:
+                            return True
