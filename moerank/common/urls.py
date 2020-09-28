@@ -10,6 +10,7 @@ from moerank.common.views.user import UserViewSet, SocialMediaViewSet, CoserNoPi
 from moerank.common.views.analysis import GetBlogAnalysisViewSet
 from moerank.common.views.permission import PermissionViewSet
 from moerank.common.views.role import RoleViewSet
+from moerank.common.views.menu import MenuViewSet
 from rest_framework import routers
 
 router = routers.DefaultRouter()
@@ -21,6 +22,7 @@ router.register(r'coserSocialMedia', CoserSocialMediaSViewSet)
 router.register(r'currentUser', CurrentUserViewSet, basename='currentUser')
 router.register(r'permissions', PermissionViewSet)
 router.register(r'roles', RoleViewSet)
+router.register(r'menus', MenuViewSet)
 
 urlpatterns = [
     path(r'', include(router.urls)),
