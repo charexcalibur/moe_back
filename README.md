@@ -6,3 +6,4 @@ A Restful API Server app build by Django Rest Framework.
 
 - [ ] RBAC
 - [ ] add cache strategy to quotation viewset
+- [ ] add user management restful api
