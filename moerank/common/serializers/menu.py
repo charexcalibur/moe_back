@@ -5,5 +5,5 @@ from ..models import Menu
 class MenuSerializer(serializers.ModelSerializer):
     class Meta:
         model = Menu
-        fields = ('id', 'name', 'icon', 'path', 'is_show','is_frame', 'sort', 'component', 'pid', 'field_name', 'url')
+        fields = ('id', 'name', 'icon', 'path', 'is_show','is_frame', 'sort', 'component', 'pid', 'url')
         extra_kwargs = {'name': {'required': True, 'error_messages': {'required': '必须填写菜单名'}}}
