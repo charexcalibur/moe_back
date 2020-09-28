@@ -8,7 +8,7 @@
 from ..models import UserProfile, SocialMedia, CoserNoPic, CoserInfo, CoserSocialMedia
 from rest_framework.views import APIView
 from rest_framework.viewsets import ModelViewSet
-from ..serializers.user import UserProfileSerializer, SocialMediaSerializer, CoserNoPicSerializer, CoserInfoSerializer, CoserSocialMediaSerializer, CurrentUserSerializer
+from ..serializers.user import UserProfileSerializer, SocialMediaSerializer, CoserNoPicSerializer, CoserInfoSerializer, CoserSocialMediaSerializer, CurrentUserSerializer, UserCreateSerializer, UserModifySerializer, UserListSerializer
 from django.contrib.auth import authenticate
 from django.contrib.auth import login as django_login
 from django.contrib.auth import logout as django_logout
@@ -16,14 +16,119 @@ from rest_framework.authtoken.models import Token
 from django.http import HttpResponse, JsonResponse
 from django.views.decorators.csrf import csrf_exempt
 from django.contrib.auth import get_user_model
+from django.contrib.auth.hashers import make_password
+from rest_framework.decorators import action
+from rest_framework.permissions import IsAuthenticated
 import json
 from rest_framework.response import Response
+from ..code import *
 
 User = get_user_model()
+
+class UserInfoView(APIView):
+    @classmethod
+    def get_permission_from_role(self, request):
+        try:
+            if request.user:
+                perms_list = []
+                for item in request.user.roles.values('permissions__method').distinct():
+                    perms_list.append(item['permissions__method'])
+                return perms_list
+        except AttributeError:
+            return None
+    def get_permission_from_id(self, id):
+        perms_list = []
+        for item in UserProfile.objects.filter(id=id).first().roles.values('permissions__method').distinct():
+            perms_list.append(item['permissions__method'])
+        return perms_list
+
+    def get(self, request):
+        try:
+            query_id = request.GET['user']
+            perms = self.get_permission_from_id(query_id)
+            data = {
+                'id': request.user.id,
+                'username': request.user.username,
+                'email': request.user.email,
+                'is_active': request.user.is_active,
+                'createTime':request.user.date_joined,
+                'roles': perms
+            }
+            return Response(data, status=OK)
+        except:
+            if request.user.id is not None:
+                perms = self.get_permission_from_role(request)
+                data = {
+                    'id': request.user.id,
+                    'username': request.user.username,
+                    'email': request.user.email,
+                    'is_active': request.user.is_active,
+                    'createTime':request.user.date_joined,
+                    'roles': perms
+                }
+                return Response(data, status=OK)
+            else:
+                return Response('请登录后访问!', status=FORBIDDEN)
 
 class UserViewSet(ModelViewSet):
     queryset = UserProfile.objects.all()
     serializer_class = UserProfileSerializer
+
+    def get_serializer_class(self):
+        if self.action == 'create':
+            return UserCreateSerializer
+        elif self.action == 'list':
+            return UserListSerializer
+        return UserModifySerializer
+
+    def create(self, request, *args, **kwargs):
+        serializer = self.get_serializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        serializer.validated_data['password'] = make_password(serializer.validated_data['password'])
+        self.perform_create(serializer)
+        headers = self.get_success_headers(serializer.data)
+        return Response(serializer.data, headers=headers)
+
+    def partial_update(self, request, pk=None):
+        save_data = request.data
+        instance = UserProfile.objects.filter(id=pk).first()
+        serializer = self.get_serializer(instance, data=save_data, partial=True)
+        serializer.is_valid()
+        serializer.save()
+        print('serializer.errors: ', serializer.errors)
+        return Response(serializer.data, status=OK)
+
+    @csrf_exempt
+    @action(methods=['post'], detail=True, permission_classes=[IsAuthenticated],
+            url_path='change-passwd', url_name='change-passwd')
+    def set_password(self, request, pk=None):
+        print('set_password_request: ', request)
+        perms = UserInfoView.get_permission_from_role(request)
+        user = UserProfile.objects.get(id=pk)
+        print('set_password_user: ', user)
+        if 'admin' in perms or 'user_all' in perms or request.user.is_superuser:
+            new_password1 = request.data['new_password1']
+            new_password2 = request.data['new_password2']
+            if new_password1 == new_password2:
+                user.set_password(new_password2)
+                user.save()
+                return Response('密码修改成功!')
+            else:
+                return Response('新密码两次输入不一致!', status=BAD)
+        else:
+            old_password = request.data['old_password']
+            print('old_password: ', old_password)
+            if check_password(old_password, user.password):
+                new_password1 = request.data['new_password1']
+                new_password2 = request.data['new_password2']
+                if new_password1 == new_password2:
+                    user.set_password(new_password2)
+                    user.save()
+                    return Response('密码修改成功!', status=OK)
+                else:
+                    return Response('新密码两次输入不一致!', status=BAD)
+            else:
+                return Response('旧密码错误!', status=BAD)            
 
 class CurrentUserViewSet(ModelViewSet):
     queryset = UserProfile.objects.all()
@@ -36,8 +141,6 @@ class CurrentUserViewSet(ModelViewSet):
             'result': current_user.data
         }
         return Response(res)
-
-
 
 class SocialMediaViewSet(ModelViewSet):
     queryset = SocialMedia.objects.all()

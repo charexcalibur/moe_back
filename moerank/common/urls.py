@@ -25,5 +25,6 @@ router.register(r'roles', RoleViewSet)
 urlpatterns = [
     path(r'', include(router.urls)),
     path('login', login),
-    path('getBlogAnalysis', GetBlogAnalysisViewSet.as_view({'get': 'list'}))
+    path('getBlogAnalysis', GetBlogAnalysisViewSet.as_view({'get': 'list'})),
+    path(r'users/{pk}/change-passwd/', UserViewSet.as_view({'post': 'set_password'})),
 ]

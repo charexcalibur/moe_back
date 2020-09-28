@@ -77,3 +77,4 @@ class RbacPermission(BasePermission):
                     for method, alias in i.items():
                         if (_method == method or method == '*') and alias in perms:
                             return True
+                            
