@@ -1,9 +1,14 @@
 # moeback
 
-A Restful API Server app build by Django Rest Framework.
+A Restful API Server App build by Django Rest Framework.
+
+
+## Feature
+
+- [X] RBAC
 
 ## TODO list
 
-- [ ] RBAC
-- [ ] add cache strategy to quotation viewset
-- [ ] add user management restful api
+- [X] RBAC
+- [X] add cache strategy to quotation viewset
+- [X] add user management restful api
