@@ -1,6 +1,6 @@
 from rest_framework.viewsets import ModelViewSet
 from moerank.fhc.models import Quotations
-from moerank.fhc.serializers.quotations import QuotationsSerializer
+from moerank.fhc.serializers.quotations import QuotationsSerializer, QuotationsListSerializer
 from moerank.common.custom import CommonPagination, TreeAPIView
 from rest_framework.filters import SearchFilter, OrderingFilter
 import base64
@@ -8,11 +8,17 @@ from rest_framework.response import Response
 
 class QuotationsViewSet(ModelViewSet):
     queryset = Quotations.objects.all()
-    serializer_class = QuotationsSerializer
     pagination_class = CommonPagination
     filter_backends = (SearchFilter, OrderingFilter)
     search_fields = ('content','author',)
     ordering_fields = ('add_time',)
+
+    def get_serializer_class(self):
+        if self.action == 'create':
+            return QuotationsSerializer
+        elif self.action == 'list':
+            return QuotationsListSerializer
+        return QuotationsSerializer
 
     def create(self, request):
         content = request.POST.get('content', None)
