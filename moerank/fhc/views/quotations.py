@@ -5,6 +5,7 @@ from moerank.common.custom import CommonPagination, TreeAPIView
 from rest_framework.filters import SearchFilter, OrderingFilter
 import base64
 from rest_framework.response import Response
+import json
 
 class QuotationsViewSet(ModelViewSet):
     queryset = Quotations.objects.all()
@@ -21,21 +22,39 @@ class QuotationsViewSet(ModelViewSet):
         return QuotationsSerializer
 
     def create(self, request):
-        content = request.POST.get('content', None)
-        if not content:
-            res = {
-                'error_no': '7001',
-                'msg': 'content is required'
-            }
-            return Response(res)
+        request_body_unicode = request.body.decode()
+        if not request_body_unicode:
+            content = request.POST.get('content', None)
+            if not content:
+                res = {
+                    'error_no': '7001',
+                    'msg': 'content is required'
+                }
+                return Response(res)
 
-        author = request.POST.get('author', None)
-        if not author:
-            res = {
-                'error_no': '7002',
-                'msg': 'author is required'
-            }
-            return Response(res)
+            author = request.POST.get('author', None)
+            if not author:
+                res = {
+                    'error_no': '7002',
+                    'msg': 'author is required'
+                }
+                return Response(res)
+        else:
+            request_body = json.loads(request_body_unicode)
+            content = request_body.get('content', None)
+            if not content:
+                res = {
+                    'error_no': '7001',
+                    'msg': 'content is required'
+                }
+                return Response(res)            
+            author = request_body.get('author', None)
+            if not author:
+                res = {
+                    'error_no': '7002',
+                    'msg': 'author is required'
+                }
+                return Response(res)            
 
         save_data = {
             'content': base64.b64encode(content.encode()),
@@ -51,21 +70,40 @@ class QuotationsViewSet(ModelViewSet):
         return Response(res)
 
     def update(self, request, pk=None):
-        content = request.POST.get('content', None)
-        if not content:
-            res = {
-                'error_no': '7001',
-                'msg': 'content is required'
-            }
-            return Response(res)
+        request_body_unicode = request.body.decode()
+        if not request_body_unicode:
+            content = request.POST.get('content', None)
+            if not content:
+                res = {
+                    'error_no': '7001',
+                    'msg': 'content is required'
+                }
+                return Response(res)
 
-        author = request.POST.get('author', None)
-        if not author:
-            res = {
-                'error_no': '7002',
-                'msg': 'author is required'
-            }
-            return Response(res)
+            author = request.POST.get('author', None)
+            if not author:
+                res = {
+                    'error_no': '7002',
+                    'msg': 'author is required'
+                }
+                return Response(res)
+        else:
+            request_body = json.loads(request_body_unicode)
+            content = request_body.get('content', None)
+            if not content:
+                res = {
+                    'error_no': '7001',
+                    'msg': 'content is required'
+                }
+                return Response(res)            
+            author = request_body.get('author', None)
+            if not author:
+                res = {
+                    'error_no': '7002',
+                    'msg': 'author is required'
+                }
+                return Response(res)            
+
 
         save_data = {
             'content': base64.b64encode(content.encode()),
