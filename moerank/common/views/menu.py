@@ -16,5 +16,36 @@ class MenuViewSet(ModelViewSet, TreeAPIView):
     ordering_fields = ('sort',)
     permission_classes = (RbacPermission,)
 
+    def list(self, request):
+        results = [
+            {
+                'path': '/dashboard',
+                'name': 'dashboard',
+                # 'icon': 'dashboard',
+                'children': [
+                    {
+                        'path': '/dashboard/analysis',
+                        'name': 'analysis'
+                    }
+                ]
+            },
+            {
+                'path': '/list',
+                # 'icon': 'table',
+                'name': 'list',                
+                'children': [
+                    {
+                        'name': 'basic-list',
+                        'path': '/list/basic-list'
+                    }
+                ]
+            }
+        ]
+        res = {
+            'error_no': '2001',
+            'results': results
+        }
+        return Response(res, status=200)
+
 class MenuTreeView(TreeAPIView):
     queryset = Menu.objects.all()
