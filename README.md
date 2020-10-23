@@ -9,6 +9,4 @@ A Restful API Server App build by Django Rest Framework.
 
 ## TODO list
 
-- [X] RBAC
-- [X] add cache strategy to quotation viewset
-- [X] add user management restful api
+- [X] Add Cache Aside Strategy to quotation view
