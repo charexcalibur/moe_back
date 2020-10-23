@@ -6,9 +6,9 @@ from rest_framework.filters import SearchFilter, OrderingFilter
 import base64
 from rest_framework.response import Response
 import json
+from django.core.cache import cache
 
 class QuotationsViewSet(ModelViewSet):
-    queryset = Quotations.objects.all()
     pagination_class = CommonPagination
     filter_backends = (SearchFilter, OrderingFilter)
     search_fields = ('content','author',)
@@ -20,6 +20,13 @@ class QuotationsViewSet(ModelViewSet):
         elif self.action == 'list':
             return QuotationsListSerializer
         return QuotationsSerializer
+
+    def get_queryset(self):
+        queryset = cache.get('quotations_queryset')
+        if not queryset:
+            queryset = Quotations.objects.all()
+            cache.set('quotations_queryset', queryset, 60*60*2)
+        return queryset
 
     def create(self, request):
         request_body_unicode = request.body.decode()
@@ -62,6 +69,7 @@ class QuotationsViewSet(ModelViewSet):
         }
 
         p = Quotations.objects.create(**save_data)
+        cache.delete('quotations_queryset')
         
         res = {
             'error_no': '7003',
@@ -111,6 +119,7 @@ class QuotationsViewSet(ModelViewSet):
         }
 
         p = Quotations.objects.filter(id=pk).update(**save_data)
+        cache.delete('quotations_queryset')
 
         res = {
             'error_no': '7004',
