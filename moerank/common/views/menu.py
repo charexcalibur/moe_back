@@ -49,3 +49,11 @@ class MenuViewSet(ModelViewSet, TreeAPIView):
 
 class MenuTreeView(TreeAPIView):
     queryset = Menu.objects.all()
+    filter_backends = (SearchFilter, OrderingFilter)
+
+    def list(self, request):
+        res = {
+            'error_no': '',
+            'results': ''
+        }
+        return Response(res, status=200)
