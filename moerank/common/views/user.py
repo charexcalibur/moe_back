@@ -136,9 +136,12 @@ class CurrentUserViewSet(ModelViewSet):
 
     def list(self, request):
         current_user = CurrentUserSerializer(request.user)
-        print('current_user: ', current_user)
+        roles = [item.name for item in request.user.roles.all()]
         res = {
-            'result': current_user.data
+            'result': {
+                'current_user': current_user.data['username'],
+                'roles': roles
+            }
         }
         return Response(res)
 
