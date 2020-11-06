@@ -1,7 +1,7 @@
 from rest_framework.viewsets import ModelViewSet
 from moerank.fhc.models import Quotations
 from moerank.fhc.serializers.quotations import QuotationsSerializer, QuotationsListSerializer
-from moerank.common.custom import CommonPagination, TreeAPIView
+from moerank.common.custom import CommonPagination, TreeAPIView, RbacPermission
 from rest_framework.filters import SearchFilter, OrderingFilter
 import base64
 from rest_framework.response import Response
@@ -13,6 +13,9 @@ class QuotationsViewSet(ModelViewSet):
     filter_backends = (SearchFilter, OrderingFilter)
     search_fields = ('content','author',)
     ordering_fields = ('add_time',)
+    perms_map = ({'*': 'admin'}, {'*': 'quotations_all'}, {'get': 'quotations_list'}, {'post': 'quotations_create'}, {'put': 'quotations_edit'},
+                 {'delete': 'quotations_delete'})
+    permission_classes = (RbacPermission,)
 
     def get_serializer_class(self):
         if self.action == 'create':
