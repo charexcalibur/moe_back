@@ -129,3 +129,18 @@ class QuotationsViewSet(ModelViewSet):
             'result': p
         }
         return Response(res)
+
+class QuotationsStatisticViewSet(ModelViewSet):
+    queryset = Quotations.objects.all()
+    serializer_class = QuotationsListSerializer
+    # perms_map = ({'*': 'admin'}, {'*': 'quotations_all'}, {'get': 'quotations_statistic_list'})
+    # permission_classes = (RbacPermission,)
+
+    def list(self, request):
+        queryset = self.get_queryset()
+        total_quotations = queryset.count()
+
+        res = {
+            'total_quotations': total_quotations
+        }
+        return Response(res)
