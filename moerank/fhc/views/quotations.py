@@ -8,6 +8,7 @@ from rest_framework.response import Response
 import json
 from django.core.cache import cache
 from moerank.common.views.notice import Notice
+import base64
 
 class QuotationsViewSet(ModelViewSet):
     pagination_class = CommonPagination
@@ -125,9 +126,17 @@ class QuotationsViewSet(ModelViewSet):
             'content': base64.b64encode(content.encode()),
             'author': base64.b64encode(author.encode())
         }
+        Q_queryset = Quotations.objects.filter(id=pk).first()
+        old_content = base64.b64decode(Q_queryset.content[2:-1]).decode('utf-8')
+        old_author = base64.b64decode(Q_queryset.author[2:-1]).decode('utf-8')
 
         p = Quotations.objects.filter(id=pk).update(**save_data)
         cache.delete('quotations_queryset')
+
+        Notice.notice({
+            'text': '修改语录通知',
+            'desp': '内容 {} 修改为 {}, 作者 {} 修改为 {}'.format(old_content, content, old_author, author)
+        })
 
         res = {
             'error_no': '7004',
