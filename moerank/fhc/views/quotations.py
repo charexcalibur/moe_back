@@ -7,6 +7,7 @@ import base64
 from rest_framework.response import Response
 import json
 from django.core.cache import cache
+from moerank.common.views.notice import Notice
 
 class QuotationsViewSet(ModelViewSet):
     pagination_class = CommonPagination
@@ -78,6 +79,10 @@ class QuotationsViewSet(ModelViewSet):
             'error_no': '7003',
             'result': QuotationsSerializer(p).data
         }
+        Notice.notice({
+            'text': '新增语录通知',
+            'desp': '内容 {}, 作者 {}'.format(content, author)
+        })
         return Response(res)
 
     def update(self, request, pk=None):

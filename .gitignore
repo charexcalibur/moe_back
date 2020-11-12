@@ -14,6 +14,8 @@ moerank/settings.py
 init_fhc.py
 static/
 moerank/fhc/data/*
+moerank/common/key.json
+moerank/common/views/notice.py
 qiniu/
 qiniu.json
 # vim ignore
