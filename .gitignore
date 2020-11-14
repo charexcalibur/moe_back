@@ -16,6 +16,7 @@ static/
 moerank/fhc/data/*
 moerank/common/key.json
 moerank/common/views/notice.py
+moerank/common/views/qiniu.py
 qiniu/
 qiniu.json
 # vim ignore

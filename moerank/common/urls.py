@@ -10,6 +10,7 @@ from moerank.common.views.user import UserViewSet, SocialMediaViewSet, CoserNoPi
 from moerank.common.views.analysis import GetBlogAnalysisViewSet
 from moerank.common.views.permission import PermissionViewSet
 from moerank.common.views.role import RoleViewSet
+from moerank.common.views.qiniu import QiniuAuthViewSet
 from moerank.common.views.menu import MenuViewSet, MenuTreeView
 from rest_framework import routers
 
@@ -28,6 +29,7 @@ urlpatterns = [
     path(r'', include(router.urls)),
     path('login', login),
     path('getBlogAnalysis', GetBlogAnalysisViewSet.as_view({'get': 'list'})),
+    path('getQiniuToken', QiniuAuthViewSet.as_view({'get': 'list'})),
     path(r'users/{pk}/change-passwd/', UserViewSet.as_view({'post': 'set_password'})),
     path(r'menu/tree/', MenuTreeView.as_view(), name='menus_tree'),
 ]
