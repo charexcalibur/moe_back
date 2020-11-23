@@ -9,10 +9,12 @@ import json
 from django.core.cache import cache
 from moerank.common.views.notice import Notice
 import base64
+from rest_framework.throttling import UserRateThrottle
 
 class QuotationsViewSet(ModelViewSet):
     pagination_class = CommonPagination
     filter_backends = (SearchFilter, OrderingFilter)
+    throttle_classes = [UserRateThrottle]
     search_fields = ('content','author',)
     ordering_fields = ('add_time',)
     perms_map = ({'*': 'admin'}, {'*': 'quotations_all'}, {'get': 'quotations_list'}, {'post': 'quotations_create'}, {'put': 'quotations_edit'},
