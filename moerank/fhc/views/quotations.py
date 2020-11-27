@@ -106,6 +106,9 @@ class QuotationsViewSet(ModelViewSet):
                     'msg': 'author is required'
                 }
                 return Response(res)
+
+            image_url = request.POST.get('url', '')
+              
         else:
             request_body = json.loads(request_body_unicode)
             content = request_body.get('content', None)
@@ -121,12 +124,14 @@ class QuotationsViewSet(ModelViewSet):
                     'error_no': '7002',
                     'msg': 'author is required'
                 }
-                return Response(res)            
-
+                return Response(res)
+            
+            image_url = request_body.get('url', '')
 
         save_data = {
             'content': base64.b64encode(content.encode()),
-            'author': base64.b64encode(author.encode())
+            'author': base64.b64encode(author.encode()),
+            'image_url': image_url
         }
         Q_queryset = Quotations.objects.filter(id=pk).first()
         old_content = base64.b64decode(Q_queryset.content[2:-1]).decode('utf-8')
