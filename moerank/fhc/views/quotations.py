@@ -107,7 +107,7 @@ class QuotationsViewSet(ModelViewSet):
                 }
                 return Response(res)
 
-            image_url = request.POST.get('url', '')
+            image_url = request.POST.get('image_url', '')
               
         else:
             request_body = json.loads(request_body_unicode)
