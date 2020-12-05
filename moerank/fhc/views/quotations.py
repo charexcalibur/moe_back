@@ -130,7 +130,7 @@ class QuotationsViewSet(ModelViewSet):
                 }
                 return Response(res)
             
-            image_url = request_body.get('url', '')
+            image_url = request_body.get('image_url', '')
 
         save_data = {
             'content': base64.b64encode(content.encode()),

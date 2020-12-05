@@ -12,4 +12,4 @@ class Quotations(TimeAbstract):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     content = models.TextField(default='', blank=True, verbose_name='内容')
     author = models.CharField(max_length=100, default='', verbose_name='作者')
-    image_url = models.URLField(max_length=200, default='', verbose_name='图片地址')
+    image_url = models.URLField(max_length=200, default='', blank=True, null=True, verbose_name='图片地址')
