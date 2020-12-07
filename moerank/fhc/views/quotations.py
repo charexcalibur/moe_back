@@ -38,13 +38,13 @@ class QuotationsViewSet(ModelViewSet):
     def create(self, request):
         request_body_unicode = request.body.decode()
         if not request_body_unicode:
-            content = request.POST.get('content', None)
-            if not content:
-                res = {
-                    'error_no': '7001',
-                    'msg': 'content is required'
-                }
-                return Response(res)
+            content = request.POST.get('content', '')
+            # if not content:
+            #     res = {
+            #         'error_no': '7001',
+            #         'msg': 'content is required'
+            #     }
+            #     return Response(res)
 
             author = request.POST.get('author', None)
             if not author:
@@ -57,13 +57,13 @@ class QuotationsViewSet(ModelViewSet):
             image_url = request.POST.get('image_url', '')
         else:
             request_body = json.loads(request_body_unicode)
-            content = request_body.get('content', None)
-            if not content:
-                res = {
-                    'error_no': '7001',
-                    'msg': 'content is required'
-                }
-                return Response(res)            
+            content = request_body.get('content', '')
+            # if not content:
+            #     res = {
+            #         'error_no': '7001',
+            #         'msg': 'content is required'
+            #     }
+            #     return Response(res)            
             author = request_body.get('author', None)
             if not author:
                 res = {
@@ -95,13 +95,13 @@ class QuotationsViewSet(ModelViewSet):
     def update(self, request, pk=None):
         request_body_unicode = request.body.decode()
         if not request_body_unicode:
-            content = request.POST.get('content', None)
-            if not content:
-                res = {
-                    'error_no': '7001',
-                    'msg': 'content is required'
-                }
-                return Response(res)
+            content = request.POST.get('content', '')
+            # if not content:
+            #     res = {
+            #         'error_no': '7001',
+            #         'msg': 'content is required'
+            #     }
+            #     return Response(res)
 
             author = request.POST.get('author', None)
             if not author:
@@ -115,13 +115,13 @@ class QuotationsViewSet(ModelViewSet):
               
         else:
             request_body = json.loads(request_body_unicode)
-            content = request_body.get('content', None)
-            if not content:
-                res = {
-                    'error_no': '7001',
-                    'msg': 'content is required'
-                }
-                return Response(res)            
+            content = request_body.get('content', '')
+            # if not content:
+            #     res = {
+            #         'error_no': '7001',
+            #         'msg': 'content is required'
+            #     }
+            #     return Response(res)            
             author = request_body.get('author', None)
             if not author:
                 res = {
