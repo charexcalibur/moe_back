@@ -10,6 +10,7 @@ from django.core.cache import cache
 from moerank.common.views.notice import Notice
 import base64
 from rest_framework.throttling import UserRateThrottle
+from moerank.common.tasks import notice
 
 class QuotationsViewSet(ModelViewSet):
     pagination_class = CommonPagination
@@ -86,9 +87,13 @@ class QuotationsViewSet(ModelViewSet):
             'error_no': '7003',
             'result': QuotationsSerializer(p).data
         }
-        Notice.notice({
+        # Notice.notice({
+        #     'text': '新增语录通知',
+        #     'desp': '内容 {}, 作者 {}'.format(content, author)
+        # })
+        notice.delay({
             'text': '新增语录通知',
-            'desp': '内容 {}, 作者 {}'.format(content, author)
+            'desp': '内容 {}, 作者 {}'.format(content, author)            
         })
         return Response(res)
 
