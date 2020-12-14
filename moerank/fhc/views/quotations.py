@@ -91,9 +91,10 @@ class QuotationsViewSet(ModelViewSet):
         #     'text': '新增语录通知',
         #     'desp': '内容 {}, 作者 {}'.format(content, author)
         # })
+        markdown_str = '![]({})'.format(image_url)
         notice.delay({
             'text': '新增语录通知',
-            'desp': '内容 {}, 作者 {}'.format(content, author)            
+            'desp': ' {} 这个 b 说 {}，还贴了一张图 {}'.format(author, content, markdown_str)            
         })
         return Response(res)
 
@@ -149,10 +150,13 @@ class QuotationsViewSet(ModelViewSet):
         p = Quotations.objects.filter(id=pk).update(**save_data)
         cache.delete('quotations_queryset')
 
-        Notice.notice({
+        old_pic_markdown = '![]({})'.format(Q_queryset.image_url)
+        new_pic_markdown = '![]({})'.format(image_url)
+
+        notice.delay({
             'text': '修改语录通知',
-            'desp': '内容 {} 修改为 {}, 作者 {} 修改为 {}'.format(old_content, content, old_author, author)
-        })
+            'desp': '内容 {} 修改为 {}, 作者 {} 修改为 {}, 图片 {} 修改为 {}'.format(old_content, content, old_author, author, old_pic_markdown, new_pic_markdown)            
+        })        
 
         res = {
             'error_no': '7004',
