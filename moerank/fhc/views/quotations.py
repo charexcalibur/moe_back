@@ -1,7 +1,7 @@
 from rest_framework.viewsets import ModelViewSet
 from moerank.fhc.models import Quotations
 from moerank.fhc.serializers.quotations import QuotationsSerializer, QuotationsListSerializer
-from moerank.common.custom import CommonPagination, TreeAPIView, RbacPermission
+from moerank.common.custom import CommonPagination, TreeAPIView, RbacPermission, IsListOrIsAuthenticated
 from rest_framework.filters import SearchFilter, OrderingFilter
 import base64
 from rest_framework.response import Response
@@ -9,8 +9,10 @@ import json
 from django.core.cache import cache
 from moerank.common.views.notice import Notice
 import base64
-from rest_framework.throttling import UserRateThrottle
+from rest_framework.throttling import UserRateThrottle, AnonRateThrottle
 from moerank.common.tasks import notice
+import random
+from rest_framework import viewsets
 
 class QuotationsViewSet(ModelViewSet):
     pagination_class = CommonPagination
@@ -178,3 +180,13 @@ class QuotationsStatisticViewSet(ModelViewSet):
             'total_quotations': total_quotations
         }
         return Response(res)
+
+class RandomQuotationsViewSet(viewsets.ViewSet):
+    throttle_classes = [AnonRateThrottle]
+    authentication_classes = []
+    permission_classes = (IsListOrIsAuthenticated,)
+    def list(self, request):
+        queryset = Quotations.objects.all()
+        random_item = random.sample(list(queryset), 1)[0]
+        serializer = QuotationsListSerializer(random_item)
+        return Response(serializer.data)
