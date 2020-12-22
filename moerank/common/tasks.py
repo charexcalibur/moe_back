@@ -1,7 +1,9 @@
 from celery import shared_task
 import requests
 import json
-
+from moerank.fhc.models import QuotationsVote, Quotations
+from moerank.fhc.serializers.quotations import QuotationsVoteSerializer
+import time
 
 @shared_task
 def notice(content):
@@ -16,3 +18,13 @@ def notice(content):
         'desp': content['desp']
     }
     requests.get(url, params=payload)
+
+@shared_task
+def vote(quotation_id):
+    que_queryset = Quotations.objects.filter(id=quotation_id['quotation_id']).first()
+    save_data = {
+        'quotation': que_queryset,
+    }
+    q = QuotationsVote.objects.create(**save_data)
+    seriazlier = QuotationsVoteSerializer(q)
+    return seriazlier.data

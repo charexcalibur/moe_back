@@ -1,7 +1,7 @@
 from rest_framework.viewsets import ModelViewSet
-from moerank.fhc.models import Quotations
+from moerank.fhc.models import Quotations, QuotationsVote
 from moerank.fhc.serializers.quotations import QuotationsSerializer, QuotationsListSerializer
-from moerank.common.custom import CommonPagination, TreeAPIView, RbacPermission, IsListOrIsAuthenticated
+from moerank.common.custom import CommonPagination, TreeAPIView, RbacPermission, IsListOrIsAuthenticated, IsCreateOrIsAuthenticated, VotePostThrottle, IsRetrieveOrIsAuthenticated
 from rest_framework.filters import SearchFilter, OrderingFilter
 import base64
 from rest_framework.response import Response
@@ -10,9 +10,10 @@ from django.core.cache import cache
 from moerank.common.views.notice import Notice
 import base64
 from rest_framework.throttling import UserRateThrottle, AnonRateThrottle
-from moerank.common.tasks import notice
+from moerank.common.tasks import notice, vote
 import random
 from rest_framework import viewsets
+from django.shortcuts import get_object_or_404
 
 class QuotationsViewSet(ModelViewSet):
     pagination_class = CommonPagination
@@ -190,3 +191,46 @@ class RandomQuotationsViewSet(viewsets.ViewSet):
         random_item = random.sample(list(queryset), 1)[0]
         serializer = QuotationsListSerializer(random_item)
         return Response(serializer.data)
+
+
+class VoteQuotationsViewSet(viewsets.ViewSet):
+    throttle_classes = [VotePostThrottle]
+    authentication_classes = []
+    permission_classes = (IsCreateOrIsAuthenticated,)
+
+    def create(self, request, pk=None):
+        quo_id = request.data.get('quo_id', None)
+        if not quo_id:
+            res = {
+                'error_no': '24001',
+                'msg': 'quo_id is required'
+            }
+            return Response(res, status=200)
+
+        que_queryset = Quotations.objects.filter(id=quo_id).first()
+        if not que_queryset:
+            res = {
+                'error_no': '24002',
+                'msg': 'no such quotation'
+            }
+            return Response(res, status=200)
+            
+        quotation_id = str(que_queryset.id)
+        vote.delay({
+            'quotation_id': quotation_id
+        })
+        res = {
+            'error_no': '24003',
+            'msg': 'vote succeed'
+        }
+        return Response(res, status=200)
+
+
+class VoteCountViewSet(viewsets.ViewSet):
+    permission_classes = (IsRetrieveOrIsAuthenticated,)
+    def retrieve(self, request, pk=None):
+        count = QuotationsVote.objects.filter(quotation=pk).count()
+        res = {
+            'count': count
+        }
+        return Response(res, status=200)

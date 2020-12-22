@@ -13,3 +13,8 @@ class Quotations(TimeAbstract):
     content = models.TextField(default='', blank=True, verbose_name='内容')
     author = models.CharField(max_length=100, default='', verbose_name='作者')
     image_url = models.URLField(max_length=200, default='', blank=True, null=True, verbose_name='图片地址')
+
+class QuotationsVote(TimeAbstract):
+    qv_id = models.UUIDField(default=uuid.uuid4, editable=False)
+    quotation = models.ForeignKey('Quotations', null=True, on_delete=models.SET_NULL, verbose_name='语录')
+    votes = models.IntegerField(blank=True, null=True, default=1, verbose_name='票数')

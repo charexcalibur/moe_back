@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from moerank.fhc.models import Quotations
+from moerank.fhc.models import Quotations, QuotationsVote
 import base64
 
 class QuotationsSerializer(serializers.ModelSerializer):
@@ -18,6 +18,7 @@ class QuotationsListSerializer(serializers.ModelSerializer):
     '''
     content = serializers.SerializerMethodField()
     author = serializers.SerializerMethodField()
+    vote_count = serializers.SerializerMethodField()
 
     class Meta:
         model = Quotations
@@ -28,3 +29,12 @@ class QuotationsListSerializer(serializers.ModelSerializer):
 
     def get_author(self, obj):
         return base64.b64decode(obj.author[2:-1])
+    
+    def get_vote_count(self, obj):
+        return QuotationsVote.objects.filter(quotation=obj.id).count()
+
+
+class QuotationsVoteSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = QuotationsVote
+        fields = '__all__'

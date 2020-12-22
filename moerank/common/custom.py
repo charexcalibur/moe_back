@@ -4,6 +4,7 @@ from rest_framework.response import Response
 from rest_framework.pagination import PageNumberPagination
 from rest_framework import serializers
 from rest_framework.permissions import BasePermission
+from rest_framework.throttling import UserRateThrottle, AnonRateThrottle
 
 class TreeSerializer(serializers.Serializer):
     id = serializers.IntegerField()
@@ -80,7 +81,6 @@ class RbacPermission(BasePermission):
                             
 
 class IsListOrIsAuthenticated(BasePermission):
-
     def has_permission(self, request, view):
         if not request.user.is_authenticated:
             if view.action == 'list':
@@ -89,3 +89,26 @@ class IsListOrIsAuthenticated(BasePermission):
                 return False
         else:
             return True
+
+class IsCreateOrIsAuthenticated(BasePermission):
+    def has_permission(self, request, view):
+        if not request.user.is_authenticated:
+            if view.action == 'create':
+                return True
+            else:
+                return False
+        else:
+            return True
+
+class IsRetrieveOrIsAuthenticated(BasePermission):
+    def has_permission(self, request, view):
+        if not request.user.is_authenticated:
+            if view.action == 'retrieve':
+                return True
+            else:
+                return False
+        else:
+            return True
+
+class VotePostThrottle(AnonRateThrottle):
+    scope = 'vote'

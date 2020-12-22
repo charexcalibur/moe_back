@@ -32,4 +32,5 @@ urlpatterns = [
     path('getQiniuToken', QiniuAuthViewSet.as_view({'get': 'list'})),
     path(r'users/{pk}/change-passwd/', UserViewSet.as_view({'post': 'set_password'})),
     path(r'menu/tree/', MenuTreeView.as_view(), name='menus_tree'),
+    path(r'menu/tree/', MenuTreeView.as_view(), name='menus_tree'),
 ]
