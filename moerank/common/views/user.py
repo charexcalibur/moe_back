@@ -198,12 +198,14 @@ def login(request):
         django_login(request, user)
         token = Token.objects.get_or_create(user=user)[0]
         roles = [item.name for item in request.user.roles.all()]
+        menus = [item['menus__path'] for item in request.user.roles.values('menus__path')]
 
         ret = {
             'error_no': '1004',
             'msg': 'succeed',
             'token': str(token),
-            'currentAuthority': roles
+            'currentAuthority': roles,
+            'menu': menus
         }
         return JsonResponse(ret, status=200, safe=False)
     else:
