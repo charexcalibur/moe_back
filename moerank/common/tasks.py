@@ -6,7 +6,7 @@ from moerank.fhc.serializers.quotations import QuotationsVoteSerializer
 import time
 
 @shared_task
-def notice(content):
+def notice(content, **kwargs):
     print('content: ', content)
     with open('/home/moeback/moerank/common/key.json', 'r') as f:
         data = json.load(f)

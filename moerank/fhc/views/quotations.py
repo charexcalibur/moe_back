@@ -1,6 +1,6 @@
 from rest_framework.viewsets import ModelViewSet
 from moerank.fhc.models import Quotations, QuotationsVote
-from moerank.fhc.serializers.quotations import QuotationsSerializer, QuotationsListSerializer
+from moerank.fhc.serializers.quotations import QuotationsSerializer, QuotationsListSerializer, RandomQuotationsListSerializer
 from moerank.common.custom import CommonPagination, TreeAPIView, RbacPermission, IsListOrIsAuthenticated, IsCreateOrIsAuthenticated, VotePostThrottle, IsRetrieveOrIsAuthenticated
 from rest_framework.filters import SearchFilter, OrderingFilter
 import base64
@@ -189,7 +189,7 @@ class RandomQuotationsViewSet(viewsets.ViewSet):
     def list(self, request):
         queryset = Quotations.objects.all()
         random_item = random.sample(list(queryset), 1)[0]
-        serializer = QuotationsListSerializer(random_item)
+        serializer = RandomQuotationsListSerializer(random_item)
         return Response(serializer.data)
 
 

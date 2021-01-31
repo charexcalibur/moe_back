@@ -33,6 +33,27 @@ class QuotationsListSerializer(serializers.ModelSerializer):
     def get_vote_count(self, obj):
         return QuotationsVote.objects.filter(quotation=obj.id).count()
 
+class RandomQuotationsListSerializer(serializers.ModelSerializer):
+    content = serializers.SerializerMethodField()
+    author = serializers.SerializerMethodField()
+    vote_count = serializers.SerializerMethodField()
+
+    class Meta:
+        model = Quotations
+        fields = '__all__'
+
+    def get_content(self, obj):
+        return base64.b64decode(obj.content[2:-1])
+
+    def get_author(self, obj):
+        author_byte = base64.b64decode(obj.author[2:-1])
+        author_str = author_byte.decode('utf-8')
+        EEE_author = str(author_str[0]) + '***'
+        return EEE_author
+    
+    def get_vote_count(self, obj):
+        return QuotationsVote.objects.filter(quotation=obj.id).count()
+
 
 class QuotationsVoteSerializer(serializers.ModelSerializer):
     class Meta:
