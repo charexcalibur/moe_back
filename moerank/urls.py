@@ -30,5 +30,6 @@ urlpatterns = [
     path(r'admin', admin.site.urls),
     path(r'api/', include('moerank.common.urls')),
     path(r'fhc/', include('moerank.fhc.urls')),
+    path(r'wallpaper/', include('moerank.wallpaper.urls')),
     path('api-auth/', include('rest_framework.urls')),
 ]

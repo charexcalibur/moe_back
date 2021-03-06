@@ -14,6 +14,8 @@ from moerank.common.tasks import notice, vote
 import random
 from rest_framework import viewsets
 from django.shortcuts import get_object_or_404
+import logging
+logger = logging.getLogger('django')
 
 class QuotationsViewSet(ModelViewSet):
     pagination_class = CommonPagination
@@ -94,6 +96,8 @@ class QuotationsViewSet(ModelViewSet):
         #     'text': '新增语录通知',
         #     'desp': '内容 {}, 作者 {}'.format(content, author)
         # })
+        print('logger: ', logger)
+        logger.info('11111111111')
         markdown_str = '![]({})'.format(image_url)
         notice.delay({
             'text': '新增语录通知',
