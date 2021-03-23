@@ -5,6 +5,7 @@ from ..serializers.wallpaper import WallpaperSerializer
 from moerank.common.custom import CommonPagination
 from rest_framework.filters import SearchFilter, OrderingFilter
 from django_filters.rest_framework import DjangoFilterBackend
+from moerank.common.custom import IsListOrIsAuthenticated
 
 class WallpaperViewSet(ModelViewSet):
     queryset = WallPaper.objects.all()
@@ -12,3 +13,4 @@ class WallpaperViewSet(ModelViewSet):
     pagination_class = CommonPagination
     filter_backends = [DjangoFilterBackend]
     filterset_fields = ['uid']
+    permission_classes = (IsListOrIsAuthenticated,)
