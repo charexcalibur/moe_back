@@ -86,3 +86,8 @@ class CoserSocialMediaSerializer(serializers.ModelSerializer):
     class Meta:
         model = CoserSocialMedia
         fields = "__all__"
+
+class RandomPicSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = CoserNoPic
+        fields = ['url']

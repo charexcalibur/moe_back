@@ -6,7 +6,7 @@
 @LastEditTime: 2020-07-20 17:01:03
 '''
 from django.urls import path, include
-from moerank.common.views.user import UserViewSet, SocialMediaViewSet, CoserNoPicViewSet, CoserInfoSViewSet, CoserSocialMediaSViewSet, login, CurrentUserViewSet
+from moerank.common.views.user import UserViewSet, SocialMediaViewSet, CoserNoPicViewSet, CoserInfoSViewSet, CoserSocialMediaSViewSet, login, CurrentUserViewSet, RandomPicViewSet
 from moerank.common.views.analysis import GetBlogAnalysisViewSet
 from moerank.common.views.permission import PermissionViewSet
 from moerank.common.views.role import RoleViewSet
@@ -33,4 +33,5 @@ urlpatterns = [
     path(r'users/{pk}/change-passwd/', UserViewSet.as_view({'post': 'set_password'})),
     path(r'menu/tree/', MenuTreeView.as_view(), name='menus_tree'),
     path(r'menu/tree/', MenuTreeView.as_view(), name='menus_tree'),
+    path('getRandomPic', RandomPicViewSet.as_view({'get': 'list'}))
 ]

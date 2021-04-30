@@ -8,7 +8,7 @@
 from ..models import UserProfile, SocialMedia, CoserNoPic, CoserInfo, CoserSocialMedia
 from rest_framework.views import APIView
 from rest_framework.viewsets import ModelViewSet
-from ..serializers.user import UserProfileSerializer, SocialMediaSerializer, CoserNoPicSerializer, CoserInfoSerializer, CoserSocialMediaSerializer, CurrentUserSerializer, UserCreateSerializer, UserModifySerializer, UserListSerializer
+from ..serializers.user import UserProfileSerializer, SocialMediaSerializer, CoserNoPicSerializer, CoserInfoSerializer, CoserSocialMediaSerializer, CurrentUserSerializer, UserCreateSerializer, UserModifySerializer, UserListSerializer, RandomPicSerializer
 from django.contrib.auth import authenticate
 from django.contrib.auth import login as django_login
 from django.contrib.auth import logout as django_logout
@@ -22,7 +22,11 @@ from rest_framework.permissions import IsAuthenticated
 import json
 from rest_framework.response import Response
 from ..code import *
-
+from rest_framework import viewsets
+import random
+from moerank.common.custom import CommonPagination, TreeAPIView, RbacPermission, IsListOrIsAuthenticated, IsCreateOrIsAuthenticated, VotePostThrottle, IsRetrieveOrIsAuthenticated
+from rest_framework.throttling import UserRateThrottle, AnonRateThrottle
+from django.core.cache import cache
 User = get_user_model()
 
 class UserInfoView(APIView):
@@ -213,4 +217,20 @@ def login(request):
             'error_no': '1005',
             'msg': 'username or password is invaild'
         }
-        return JsonResponse(ret, status=200, safe=False)        
+        return JsonResponse(ret, status=200, safe=False)
+
+class RandomPicViewSet(viewsets.ViewSet):
+    throttle_classes = [AnonRateThrottle]
+    authentication_classes = []
+    permission_classes = (IsListOrIsAuthenticated,)
+    def list(self, request):
+        cache_list = cache.get('pic_id_list')
+        if not cache_list:
+            values_list = CoserNoPic.objects.values_list('id', flat=True)
+            cache_list = [item for item in values_list]
+            cache.set('pic_id_list', cache_list)
+        random_id = random.sample(cache_list, min(len(cache_list), 1))[0]
+        print('random_id: ', random_id)
+        queryset = CoserNoPic.objects.filter(id=random_id).first()
+        serializer = RandomPicSerializer(queryset)
+        return Response(serializer.data)

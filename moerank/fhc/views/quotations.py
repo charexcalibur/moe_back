@@ -8,7 +8,6 @@ from rest_framework.response import Response
 import json
 from django.core.cache import cache
 from moerank.common.views.notice import Notice
-import base64
 from rest_framework.throttling import UserRateThrottle, AnonRateThrottle
 from moerank.common.tasks import notice, vote
 import random
