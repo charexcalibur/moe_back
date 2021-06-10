@@ -7,12 +7,16 @@ from rest_framework.response import Response
 from rest_framework.throttling import UserRateThrottle, AnonRateThrottle
 import requests
 import json
+from django_filters.rest_framework import DjangoFilterBackend
+from django.core.cache import cache
 
 class HerosViewSet(ModelViewSet):
     pagination_class = CommonPagination
     queryset = Heros.objects.all()
     serializer_class = HerosSerializer
     throttle_classes = [AnonRateThrottle]
+    filter_backends = [DjangoFilterBackend]
+    filterset_fields = ['position_type']
     authentication_classes = []
     permission_classes = (IsListOrIsAuthenticated,)    
     
@@ -53,3 +57,39 @@ class GetWinRateViewSet(viewsets.ViewSet):
             'results': r.json()
         }
         return Response(res)
+
+
+class HeroCacheControl(viewsets.ViewSet):
+    permission_classes = (IsListOrIsAuthenticated,)
+
+    def list(self, request):
+        query_string = request.query_params
+        if query_string:
+            change = query_string['change']
+            if change == 'true':
+                res = {
+                    'isCache': True
+                }
+                cache.set('is_cache', res)
+                return Response(res)
+            elif change == 'false':
+                res = {
+                    'isCache': False
+                }
+                cache.set('is_cache', res)
+                return Response(res)
+            else:
+                res = {
+                    'msg': 'true or false'
+                }
+                return Response(res)
+
+        is_cache = cache.get('is_cache')
+        if not is_cache:
+            res = {
+                'isCache': True
+            }
+            cache.set('is_cache', res)
+            return Response(res)
+        else:
+            return Response(is_cache)

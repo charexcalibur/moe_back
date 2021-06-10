@@ -24,4 +24,9 @@ class Heros(models.Model):
     avatar_url = models.URLField(max_length=200, default='', blank=True, null=True, verbose_name='头像地址')
     position_type = models.CharField(max_length=30, choices=hero_type_choices, default='', blank=True, verbose_name="英雄类型")
 
-
+class RankModel(TimeAbstract):
+    title = models.CharField(max_length=100, default='', verbose_name='模型标题')
+    sub_title = models.CharField(max_length=100, default='', verbose_name='模型副标题')
+    des = models.CharField(max_length=100, default='', blank=True, null=True, verbose_name='模型描述')
+    rank_url = models.URLField(max_length=200, default='', blank=True, null=True, verbose_name='模型请求地址')
+    is_show = models.BooleanField(default=True, verbose_name='是否展示')

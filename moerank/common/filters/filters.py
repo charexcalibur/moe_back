@@ -8,6 +8,7 @@ class MenuFilterBackend(filters.BaseFilterBackend):
         ).distinct()
 
         perms_list = [item['permissions__method'] for item in perms]
+        print('perms_list: ', perms_list)
 
         if 'admin' in perms_list:
             return queryset
