@@ -28,6 +28,7 @@ class GetWinRateViewSet(viewsets.ViewSet):
         request_body_unicode = request.body.decode()
         request_body = json.loads(request_body_unicode)        
         hero_id_list = request_body.get('hero_list', None)
+        rank_url = request_body.get('rank_url', None)
 
         print('hero_id_list: ', hero_id_list)
         if not hero_id_list:
@@ -44,23 +45,32 @@ class GetWinRateViewSet(viewsets.ViewSet):
             'data': hero_id_list
         }
 
-        with open('/home/moeback/moerank/common/key.json', 'r') as f:
-            json_data = json.load(f)
+        if not rank_url:
+            with open('/home/moeback/moerank/common/key.json', 'r') as f:
+                json_data = json.load(f)
 
-        url = json_data['winrate_url']
+            url = json_data['winrate_url']
 
 
-        r = requests.post(url, data=json.dumps(data))
-        
-        res = {
-            'msg': 'ok',
-            'results': r.json()
-        }
-        return Response(res)
-
+            r = requests.post(url, data=json.dumps(data))
+            
+            res = {
+                'msg': 'ok',
+                'results': r.json()
+            }
+            return Response(res)
+        else:
+            r = requests.post(rank_url, data=json.dumps(data))
+            
+            res = {
+                'msg': 'ok',
+                'results': r.json()
+            }
+            return Response(res)
 
 class HeroCacheControl(viewsets.ViewSet):
     permission_classes = (IsListOrIsAuthenticated,)
+    throttle_classes = [UserRateThrottle]
 
     def list(self, request):
         query_string = request.query_params

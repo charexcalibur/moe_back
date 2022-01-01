@@ -12,6 +12,7 @@ env/
 .vscode/
 moerank/settings.py
 init_fhc.py
+init_dota_item.py
 static/
 moerank/fhc/data/*
 moerank/common/key.json
