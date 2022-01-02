@@ -1,11 +1,5 @@
 from django.db import models
-
-class TimeAbstract(models.Model):
-    add_time = models.DateTimeField(auto_now_add=True, blank=True, verbose_name='添加时间')
-    modify_time = models.DateTimeField(auto_now=True, blank=True, verbose_name='更新时间')
-
-    class Meta:
-        abstract = True
+from moerank.common.models import TimeAbstract
 
 # Create your models here.
 class Heros(models.Model):
