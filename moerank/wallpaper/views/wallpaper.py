@@ -1,7 +1,7 @@
 from rest_framework.viewsets import ModelViewSet
-from ..models import WallPaper, ImageTag
+from ..models import WallPaper, ImageTag, ImageSize, ImageCategory
 from rest_framework.response import Response
-from ..serializers.wallpaper import WallpaperSerializer, TagsSerializer
+from ..serializers.wallpaper import WallpaperSerializer, TagsSerializer, ImageSizeSerializer, ImageCategorySerializer
 from moerank.common.custom import CommonPagination
 from rest_framework.filters import SearchFilter, OrderingFilter
 from django_filters.rest_framework import DjangoFilterBackend
@@ -19,4 +19,14 @@ class WallpaperViewSet(ModelViewSet):
 class TagsViewSet(ModelViewSet):
     queryset = ImageTag.objects.all()
     serializer_class = TagsSerializer
+    pagination_class = CommonPagination
+    
+class ImageCategoryViewSet(ModelViewSet):
+    queryset = ImageCategory.objects.all()
+    serializer_class = ImageCategorySerializer
+    pagination_class = CommonPagination
+    
+class ImageSizeViewSet(ModelViewSet):
+    queryset = ImageSize.objects.all()
+    serializer_class = ImageSizeSerializer
     pagination_class = CommonPagination
