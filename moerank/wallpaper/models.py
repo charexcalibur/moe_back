@@ -16,8 +16,13 @@ class WallPaper(TimeAbstract):
     wallpaper_url = models.URLField(null=True, default=None, blank=True, verbose_name='壁纸地址')
     raw_url = models.URLField(null=True, default=None, blank=True, verbose_name='raw 地址')
     tags = models.ManyToManyField("ImageTag", verbose_name=("标签"))
-    rate = models.CharField(max_length=10, default='', blank=True, null=True, verbose_name='评级')
+    rate = models.IntegerField( default=0, blank=True, null=True, verbose_name='评级')
+    equipment = models.CharField(max_length=50, default='', blank=True, null=True, verbose_name='器材')
+    lens = models.CharField(max_length=50, default='', blank=True, null=True, verbose_name='镜头')
     categories = models.ManyToManyField("ImageCategory", verbose_name=("类别"))
+    
+    def __str__(self):
+        return self.name
 
 class ImageTag(TimeAbstract):
     tag_name = models.CharField(max_length=50, default='', unique=True, blank=True, null=True, verbose_name='标签名')

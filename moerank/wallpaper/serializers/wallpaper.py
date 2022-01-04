@@ -23,7 +23,9 @@ class WallpaperSerializer(serializers.ModelSerializer):
             'categories',
             'image_sizes',
             'add_time',
-            'modify_time'
+            'modify_time',
+            'equipment',
+            'lens'
         ]
         
 class TagsSerializer(serializers.ModelSerializer):

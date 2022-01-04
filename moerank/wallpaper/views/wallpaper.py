@@ -11,8 +11,12 @@ class WallpaperViewSet(ModelViewSet):
     queryset = WallPaper.objects.all()
     serializer_class = WallpaperSerializer
     pagination_class = CommonPagination
-    filter_backends = [DjangoFilterBackend]
-    filterset_fields = ['uid']
+    filter_backends = [DjangoFilterBackend, SearchFilter, OrderingFilter]
+    filterset_fields = {
+        'uid': ['exact'],
+        'rate': ['exact', 'gte', 'range']
+    }
+    ordering_fields = ['add_time', 'rate']
     permission_classes = (IsListOrIsAuthenticated,)
     
     
