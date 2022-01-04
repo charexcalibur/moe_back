@@ -37,8 +37,14 @@ class ImageCategory(TimeAbstract):
         return self.category_name
     
 class ImageSize(TimeAbstract):
+    type_choice = (
+        (1, 'origin'),
+        (2, '4k'),
+        (3, 'thumbnail')
+    )
     uid = models.UUIDField(default=uuid.uuid4, editable=False)
     image = models.ForeignKey('WallPaper', null=True, on_delete=models.SET_NULL, verbose_name='image')
     width = models.CharField(max_length=50, default='', null=True, blank=True, verbose_name='宽')
     height = models.CharField(max_length=50, default='', null=True, blank=True, verbose_name='高')
     cdn_url = models.URLField(null=True, default='', blank=True, verbose_name='资源地址')
+    type = models.CharField(max_length=50, choices=type_choice, default=1, blank=True, verbose_name='图片类型')

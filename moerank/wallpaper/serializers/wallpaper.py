@@ -5,7 +5,7 @@ class WallpaperSerializer(serializers.ModelSerializer):
     image_sizes = serializers.SerializerMethodField()
     
     def get_image_sizes(self, obj):
-        return [item for item in ImageSize.objects.filter(image=obj.id).select_related('image')]
+        return [ImageSizeSerializerForWallpaper(item).data for item in ImageSize.objects.filter(image=obj.id).select_related('image')]
     
     class Meta:
         model = WallPaper
@@ -37,7 +37,16 @@ class ImageSizeSerializer(serializers.ModelSerializer):
     class Meta:
         model = ImageSize
         fields = '__all__'
-        
+
+class ImageSizeSerializerForWallpaper(serializers.ModelSerializer):
+    class Meta:
+        model = ImageSize
+        fields = [
+            'width',
+            'height',
+            'cdn_url',
+            'type'
+        ]
 
 class ImageCategorySerializer(serializers.ModelSerializer):
     class Meta:
