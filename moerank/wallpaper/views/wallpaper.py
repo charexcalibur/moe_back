@@ -6,11 +6,12 @@ from moerank.common.custom import CommonPagination
 from rest_framework.filters import SearchFilter, OrderingFilter
 from django_filters.rest_framework import DjangoFilterBackend
 from moerank.common.custom import IsListOrIsAuthenticated
+from ..filters.filters import WallPaperFilterBackend
 
 class WallpaperViewSet(ModelViewSet):
     queryset = WallPaper.objects.all()
     pagination_class = CommonPagination
-    filter_backends = [DjangoFilterBackend, SearchFilter, OrderingFilter]
+    filter_backends = [WallPaperFilterBackend, DjangoFilterBackend, SearchFilter, OrderingFilter]
     filterset_fields = {
         'uid': ['exact'],
         'rate': ['exact', 'gte', 'range'],

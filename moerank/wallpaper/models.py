@@ -19,6 +19,7 @@ class WallPaper(TimeAbstract):
     rate = models.IntegerField( default=0, blank=True, null=True, verbose_name='评级')
     equipments = models.ManyToManyField('Equipment', verbose_name=('设备'))
     categories = models.ManyToManyField('ImageCategory', verbose_name=("类别"))
+    is_shown = models.CharField(max_length=1, default=1, verbose_name='是否展示')
     
     def __str__(self):
         return self.name
