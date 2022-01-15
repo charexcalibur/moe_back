@@ -15,11 +15,10 @@ class WallPaper(TimeAbstract):
     thumbnail_url = models.URLField(null=True, default=None, blank=True, verbose_name='缩略图地址')
     wallpaper_url = models.URLField(null=True, default=None, blank=True, verbose_name='壁纸地址')
     raw_url = models.URLField(null=True, default=None, blank=True, verbose_name='raw 地址')
-    tags = models.ManyToManyField("ImageTag", verbose_name=("标签"))
+    tags = models.ManyToManyField('ImageTag', verbose_name=("标签"))
     rate = models.IntegerField( default=0, blank=True, null=True, verbose_name='评级')
-    equipment = models.CharField(max_length=50, default='', blank=True, null=True, verbose_name='器材')
-    lens = models.CharField(max_length=50, default='', blank=True, null=True, verbose_name='镜头')
-    categories = models.ManyToManyField("ImageCategory", verbose_name=("类别"))
+    equipments = models.ManyToManyField('Equipment', verbose_name=('设备'))
+    categories = models.ManyToManyField('ImageCategory', verbose_name=("类别"))
     
     def __str__(self):
         return self.name
@@ -48,3 +47,18 @@ class ImageSize(TimeAbstract):
     height = models.CharField(max_length=50, default='', null=True, blank=True, verbose_name='高')
     cdn_url = models.URLField(null=True, default='', blank=True, verbose_name='资源地址')
     type = models.CharField(max_length=50, choices=type_choice, default=1, blank=True, verbose_name='图片类型')
+    
+class Equipment(TimeAbstract):
+    type_choice = (
+        (1, 'camera'),
+        (2, 'lens'),
+        (3, 'phone'),
+        (4, 'drone')
+    )
+    name = models.CharField(max_length=50, default='', blank=True, null=True, verbose_name='器材名称')
+    brand = models.CharField(max_length=50, default='', blank=True, null=True, verbose_name='品牌名称')
+    type = models.CharField(max_length=50, choices=type_choice, default=1, blank=True, verbose_name='器材类型')
+    remark = models.CharField(max_length=100, default='', blank=True, null=True, verbose_name='备注')
+    
+    def __str__(self):
+        return self.name    

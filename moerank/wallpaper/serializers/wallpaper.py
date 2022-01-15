@@ -1,15 +1,43 @@
+from pyexpat import model
 from rest_framework import serializers
-from ..models import WallPaper, ImageTag, ImageSize, ImageCategory
+from ..models import WallPaper, ImageTag, ImageSize, ImageCategory, Equipment
 
-class WallpaperSerializer(serializers.ModelSerializer):
+class WallpaperListSerializer(serializers.ModelSerializer):
     image_sizes = serializers.SerializerMethodField()
-    
+    equipments = serializers.SerializerMethodField()
+    tags = serializers.SerializerMethodField()
+    categories = serializers.SerializerMethodField()
+
     def get_image_sizes(self, obj):
         return [ImageSizeSerializerForWallpaper(item).data for item in ImageSize.objects.filter(image=obj.id).select_related('image')]
-    
+
+    def get_equipments(self, obj):
+        return [
+            {
+                'name': item.name,
+                'brand': item.brand,
+                'type': item.type
+            } for item in obj.equipments.all() if obj.equipments
+        ]
+        
+    def get_tags(self, obj):
+        return [
+            {
+                'name': item.tag_name
+            } for item in obj.tags.all() if obj.tags
+        ]
+        
+    def get_categories(self, obj):
+        return [
+            {
+                'category_name': item.category_name
+            } for item in obj.categories.all() if obj.categories
+        ]
+
     class Meta:
         model = WallPaper
         fields = [
+            'id',
             'uid',
             'name', 
             'des', 
@@ -24,9 +52,13 @@ class WallpaperSerializer(serializers.ModelSerializer):
             'image_sizes',
             'add_time',
             'modify_time',
-            'equipment',
-            'lens'
+            'equipments'
         ]
+        
+class WallpaperSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = WallPaper
+        fields = '__all__'
         
 class TagsSerializer(serializers.ModelSerializer):
     class Meta:
@@ -51,4 +83,9 @@ class ImageSizeSerializerForWallpaper(serializers.ModelSerializer):
 class ImageCategorySerializer(serializers.ModelSerializer):
     class Meta:
         model = ImageCategory
+        fields = '__all__'
+        
+class EquipmentSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Equipment
         fields = '__all__'
