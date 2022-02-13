@@ -20,6 +20,7 @@ class WallPaper(TimeAbstract):
     equipments = models.ManyToManyField('Equipment', verbose_name=('设备'))
     categories = models.ManyToManyField('ImageCategory', verbose_name=("类别"))
     is_shown = models.CharField(max_length=1, default=1, verbose_name='是否展示')
+    shooting_date = models.CharField(max_length=50, default='', verbose_name='拍摄日期')
     
     def __str__(self):
         return self.name

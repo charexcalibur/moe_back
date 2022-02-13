@@ -52,7 +52,8 @@ class WallpaperListSerializer(serializers.ModelSerializer):
             'image_sizes',
             'add_time',
             'modify_time',
-            'equipments'
+            'equipments',
+            'shooting_date'
         ]
         
 class WallpaperSerializer(serializers.ModelSerializer):
