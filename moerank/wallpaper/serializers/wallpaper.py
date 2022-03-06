@@ -16,21 +16,24 @@ class WallpaperListSerializer(serializers.ModelSerializer):
             {
                 'name': item.name,
                 'brand': item.brand,
-                'type': item.type
+                'type': item.type,
+                'id': item.id
             } for item in obj.equipments.all() if obj.equipments
         ]
         
     def get_tags(self, obj):
         return [
             {
-                'name': item.tag_name
+                'name': item.tag_name,
+                'id': item.id
             } for item in obj.tags.all() if obj.tags
         ]
         
     def get_categories(self, obj):
         return [
             {
-                'category_name': item.category_name
+                'category_name': item.category_name,
+                'id': item.id
             } for item in obj.categories.all() if obj.categories
         ]
 
@@ -78,7 +81,9 @@ class ImageSizeSerializerForWallpaper(serializers.ModelSerializer):
             'width',
             'height',
             'cdn_url',
-            'type'
+            'type',
+            'uid',
+            'id'
         ]
 
 class ImageCategorySerializer(serializers.ModelSerializer):
