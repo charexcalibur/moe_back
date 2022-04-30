@@ -40,6 +40,8 @@ class ImageCategoryViewSet(ModelViewSet):
     
 class ImageSizeViewSet(ModelViewSet):
     queryset = ImageSize.objects.all()
+    filter_backends = [DjangoFilterBackend, SearchFilter, OrderingFilter]
+    filter_fields = ['uid', 'image__id']
     serializer_class = ImageSizeSerializer
     pagination_class = CommonPagination
     
