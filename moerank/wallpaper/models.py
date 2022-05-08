@@ -64,3 +64,16 @@ class Equipment(TimeAbstract):
     
     def __str__(self):
         return self.name    
+    
+    
+class Comment(TimeAbstract):
+    verify_status_choices = (
+        (0, '未审核'),
+        (1, '已审核')
+    )
+    name = models.CharField(max_length=50, default='', blank=True, null=True, verbose_name='评论人')
+    e_mail_address = models.URLField(null=True, default=None, blank=True, verbose_name='邮箱地址')
+    comment = models.TextField(default='', blank=True, null=True, verbose_name='评论')
+    pid = models.ForeignKey('Comment', on_delete=models.SET_NULL, null=True, related_name='comment_parent')
+    photo = models.ForeignKey('WallPaper', on_delete=models.SET_NULL, null=True, blank=True)
+    verify_status = models.CharField(max_length=1, choices=verify_status_choices, default=0, verbose_name='审核状态')

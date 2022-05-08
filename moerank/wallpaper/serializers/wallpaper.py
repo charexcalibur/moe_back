@@ -1,12 +1,20 @@
 from pyexpat import model
 from rest_framework import serializers
-from ..models import WallPaper, ImageTag, ImageSize, ImageCategory, Equipment
+from ..models import WallPaper, ImageTag, ImageSize, ImageCategory, Equipment, Comment
 
 class WallpaperListSerializer(serializers.ModelSerializer):
     image_sizes = serializers.SerializerMethodField()
     equipments = serializers.SerializerMethodField()
     tags = serializers.SerializerMethodField()
     categories = serializers.SerializerMethodField()
+    comments = serializers.SerializerMethodField()
+    
+    def get_comments(self, obj):
+        queryset = Comment.objects.filter(photo=obj.id, verify_status=1)
+        if not queryset:
+            return []
+        else:
+            return [item for item in queryset]
 
     def get_image_sizes(self, obj):
         return [ImageSizeSerializerForWallpaper(item).data for item in ImageSize.objects.filter(image=obj.id).select_related('image')]
@@ -56,7 +64,9 @@ class WallpaperListSerializer(serializers.ModelSerializer):
             'add_time',
             'modify_time',
             'equipments',
-            'shooting_date'
+            'shooting_date',
+            'is_shown',
+            'comments'
         ]
         
 class WallpaperSerializer(serializers.ModelSerializer):
@@ -94,4 +104,9 @@ class ImageCategorySerializer(serializers.ModelSerializer):
 class EquipmentSerializer(serializers.ModelSerializer):
     class Meta:
         model = Equipment
+        fields = '__all__'
+        
+class CommentSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Comment
         fields = '__all__'
