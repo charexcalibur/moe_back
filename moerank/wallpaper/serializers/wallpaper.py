@@ -14,7 +14,7 @@ class WallpaperListSerializer(serializers.ModelSerializer):
         if not queryset:
             return []
         else:
-            return [item for item in queryset]
+            return [CommentSerializer(item).data for item in queryset][::-1]
 
     def get_image_sizes(self, obj):
         return [ImageSizeSerializerForWallpaper(item).data for item in ImageSize.objects.filter(image=obj.id).select_related('image')]

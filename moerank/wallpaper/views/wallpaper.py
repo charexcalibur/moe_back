@@ -2,10 +2,9 @@ from rest_framework.viewsets import ModelViewSet
 from ..models import WallPaper, ImageTag, ImageSize, ImageCategory, Equipment, Comment
 from rest_framework.response import Response
 from ..serializers.wallpaper import WallpaperSerializer, TagsSerializer, ImageSizeSerializer, ImageCategorySerializer, WallpaperListSerializer, EquipmentSerializer, CommentSerializer
-from moerank.common.custom import CommonPagination
 from rest_framework.filters import SearchFilter, OrderingFilter
 from django_filters.rest_framework import DjangoFilterBackend
-from moerank.common.custom import IsListOrIsAuthenticated, IsCreateOrIsAuthenticated
+from moerank.common.custom import CommonPagination, IsListOrIsAuthenticated, IsCreateOrIsAuthenticated, VotePostThrottle
 from ..filters.filters import WallPaperFilterBackend
 
 class WallpaperViewSet(ModelViewSet):
@@ -26,7 +25,6 @@ class WallpaperViewSet(ModelViewSet):
             return WallpaperListSerializer
         else:
             return WallpaperSerializer
-    
     
 class TagsViewSet(ModelViewSet):
     queryset = ImageTag.objects.all()
@@ -57,3 +55,4 @@ class CommentViewSet(ModelViewSet):
     serializer_class = CommentSerializer
     pagination_class = CommonPagination
     permission_classes = (IsCreateOrIsAuthenticated,)
+    throttle_classes = [VotePostThrottle]
