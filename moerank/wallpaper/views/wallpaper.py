@@ -17,7 +17,7 @@ class WallpaperViewSet(ModelViewSet):
         'tags': ['exact'],
         'categories': ['exact']
     }
-    ordering_fields = ['add_time', 'rate']
+    ordering_fields = ['add_time', 'rate', 'shooting_date']
     permission_classes = (IsListOrIsAuthenticated,)
     
     def get_serializer_class(self):
