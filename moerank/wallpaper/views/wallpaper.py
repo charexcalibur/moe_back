@@ -6,6 +6,7 @@ from rest_framework.filters import SearchFilter, OrderingFilter
 from django_filters.rest_framework import DjangoFilterBackend
 from moerank.common.custom import CommonPagination, IsListOrIsAuthenticated, IsCreateOrIsAuthenticated, VotePostThrottle
 from ..filters.filters import WallPaperFilterBackend
+from moerank.common.tasks import notice
 
 class WallpaperViewSet(ModelViewSet):
     queryset = WallPaper.objects.all()
@@ -56,3 +57,12 @@ class CommentViewSet(ModelViewSet):
     pagination_class = CommonPagination
     permission_classes = (IsCreateOrIsAuthenticated,)
     throttle_classes = [VotePostThrottle]
+    
+    def create(self, request, *args, **kwargs):
+        comment = request.data.get('comment')
+        name = request.data.get('name')
+        notice.delay({
+            'text': '评论审核通知',
+            'desp': '{} 评论了 {}'.format(name, comment)
+        })
+        return super().create(request, *args, **kwargs)
