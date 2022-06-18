@@ -20,6 +20,7 @@ moerank/common/views/notice.py
 moerank/common/views/qiniu.py
 qiniu/
 qiniu.json
+moerank/exam
 # vim ignore
 # Swap
 [._]*.s[a-v][a-z]

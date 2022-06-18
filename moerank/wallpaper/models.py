@@ -1,3 +1,5 @@
+from email.policy import default
+from pyexpat import model
 from django.db import models
 import uuid
 from moerank.common.models import TimeAbstract
@@ -49,6 +51,7 @@ class ImageSize(TimeAbstract):
     height = models.CharField(max_length=50, default='', null=True, blank=True, verbose_name='高')
     cdn_url = models.URLField(null=True, default='', blank=True, verbose_name='资源地址')
     type = models.CharField(max_length=50, choices=type_choice, default=1, blank=True, verbose_name='图片类型')
+    color_range = models.JSONField(default=dict, blank=True, null=True, verbose_name='主色值')
     
 class Equipment(TimeAbstract):
     type_choice = (

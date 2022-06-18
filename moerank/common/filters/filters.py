@@ -11,6 +11,7 @@ class MenuFilterBackend(filters.BaseFilterBackend):
         print('perms_list: ', perms_list)
 
         if 'admin' in perms_list:
+            print('menu: ', queryset)
             return queryset
         else:
             menus_id_list = [item['menus'] for item in request.user.roles.values('menus')]
