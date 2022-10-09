@@ -93,7 +93,8 @@ class ImageSizeSerializerForWallpaper(serializers.ModelSerializer):
             'cdn_url',
             'type',
             'uid',
-            'id'
+            'id',
+            'color_range'
         ]
 
 class ImageCategorySerializer(serializers.ModelSerializer):

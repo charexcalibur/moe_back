@@ -51,18 +51,20 @@ class EquipmentViewSet(ModelViewSet):
     
 class CommentViewSet(ModelViewSet):
     queryset = Comment.objects.all()
-    filter_backends = [DjangoFilterBackend]
+    filter_backends = [DjangoFilterBackend, OrderingFilter, SearchFilter]
     filter_fields = ['verify_status', 'id', 'pid', 'photo__id']
     serializer_class = CommentSerializer
     pagination_class = CommonPagination
     permission_classes = (IsCreateOrIsAuthenticated,)
     throttle_classes = [VotePostThrottle]
+    ordering_fields = ['add_time']
+    
     
     def create(self, request, *args, **kwargs):
         comment = request.data.get('comment')
         name = request.data.get('name')
         notice.delay({
             'text': '评论审核通知',
-            'desp': '{} 评论了 {}'.format(name, comment)
+            'desp': f'{name} 评论了 {comment}'
         })
         return super().create(request, *args, **kwargs)
