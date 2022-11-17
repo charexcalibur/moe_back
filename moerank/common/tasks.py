@@ -8,7 +8,7 @@ import time
 @shared_task
 def notice(content, **kwargs):
     print('content: ', content)
-    with open('/home/moeback/moerank/common/key.json', 'r') as f:
+    with open('/home/moe_back/moerank/common/key.json', 'r') as f:
         data = json.load(f)
 
     key = data['server_key']

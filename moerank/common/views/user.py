@@ -24,10 +24,12 @@ from rest_framework.response import Response
 from ..code import *
 from rest_framework import viewsets
 import random
-from moerank.common.custom import CommonPagination, TreeAPIView, RbacPermission, IsListOrIsAuthenticated, IsCreateOrIsAuthenticated, VotePostThrottle, IsRetrieveOrIsAuthenticated
+from moerank.common.custom import CommonPagination, TreeAPIView, RbacPermission, IsListOrIsAuthenticated, IsCreateOrIsAuthenticated, VotePostThrottle, IsRetrieveOrIsAuthenticated, csrf
 from rest_framework.throttling import UserRateThrottle, AnonRateThrottle
 from django.core.cache import cache
 User = get_user_model()
+from rest_framework.authentication import SessionAuthentication, BasicAuthentication,TokenAuthentication
+
 
 class UserInfoView(APIView):
     @classmethod
@@ -77,6 +79,7 @@ class UserInfoView(APIView):
 class UserViewSet(ModelViewSet):
     queryset = UserProfile.objects.all()
     serializer_class = UserProfileSerializer
+    authentication_classes = (csrf, SessionAuthentication, BasicAuthentication,TokenAuthentication)
 
     def get_serializer_class(self):
         if self.action == 'create':
@@ -93,6 +96,7 @@ class UserViewSet(ModelViewSet):
         headers = self.get_success_headers(serializer.data)
         return Response(serializer.data, headers=headers)
 
+    @csrf_exempt
     def partial_update(self, request, pk=None):
         save_data = request.data
         instance = UserProfile.objects.filter(id=pk).first()

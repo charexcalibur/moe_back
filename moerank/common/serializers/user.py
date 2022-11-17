@@ -39,11 +39,11 @@ class UserModifySerializer(serializers.ModelSerializer):
         fields = ['id', 'username', 'name', 'mobile', 'email',
                   'is_active', 'roles']
 
-    def validate_mobile(self, mobile):
-        REGEX_MOBILE = "^1[358]\d{9}$|^147\d{8}$|^176\d{8}$"
-        if not re.match(REGEX_MOBILE, mobile):
-            raise serializers.ValidationError("手机号码不合法")
-        return mobile
+    # def validate_mobile(self, mobile):
+    #     REGEX_MOBILE = "^1[358]\d{9}$|^147\d{8}$|^176\d{8}$"
+    #     if not re.match(REGEX_MOBILE, mobile):
+    #         raise serializers.ValidationError("手机号码不合法")
+    #     return mobile
 
 class UserCreateSerializer(serializers.ModelSerializer):
     username = serializers.CharField(required=True, allow_blank=False)
@@ -59,13 +59,13 @@ class UserCreateSerializer(serializers.ModelSerializer):
             raise serializers.ValidationError(username + ' 账号已存在')
         return username
 
-    def validate_mobile(self, mobile):
-        REGEX_MOBILE = "^1[358]\d{9}$|^147\d{8}$|^176\d{8}$"
-        if not re.match(REGEX_MOBILE, mobile):
-            raise serializers.ValidationError("手机号码不合法")
-        if UserProfile.objects.filter(mobile=mobile):
-            raise serializers.ValidationError("手机号已经被注册")
-        return mobile
+    # def validate_mobile(self, mobile):
+    #     REGEX_MOBILE = "^1[358]\d{9}$|^147\d{8}$|^176\d{8}$"
+    #     if not re.match(REGEX_MOBILE, mobile):
+    #         raise serializers.ValidationError("手机号码不合法")
+    #     if UserProfile.objects.filter(mobile=mobile):
+    #         raise serializers.ValidationError("手机号已经被注册")
+    #     return mobile
 
 class SocialMediaSerializer(serializers.ModelSerializer):
     class Meta:

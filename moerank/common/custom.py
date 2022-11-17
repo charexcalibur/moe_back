@@ -5,6 +5,12 @@ from rest_framework.pagination import PageNumberPagination
 from rest_framework import serializers
 from rest_framework.permissions import BasePermission
 from rest_framework.throttling import UserRateThrottle, AnonRateThrottle
+from rest_framework.authentication import SessionAuthentication
+
+class csrf(SessionAuthentication):
+    def enforce_csrf(self, request):
+        return
+
 
 class TreeSerializer(serializers.Serializer):
     id = serializers.IntegerField()

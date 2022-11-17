@@ -19,8 +19,8 @@ class TimeAbstract(models.Model):
 class UserProfile(AbstractUser):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     name = models.CharField(max_length=20, default='', unique=True, verbose_name='用户名')
-    mobile = models.CharField(max_length=11, null=True, unique=True, blank=True,  default='', verbose_name='手机号码')
-    email = models.EmailField(max_length=50, null=True, unique=True, blank=True,  verbose_name='邮箱')
+    mobile = models.CharField(max_length=11, null=True, blank=True, default='', verbose_name='手机号码')
+    email = models.EmailField(max_length=50, null=True, blank=True, default='', verbose_name='邮箱')
     roles = models.ManyToManyField('Role', verbose_name='角色', blank=True)
 
     class Meta:

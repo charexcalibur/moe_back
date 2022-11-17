@@ -1,7 +1,7 @@
 from rest_framework.viewsets import ModelViewSet
 from moerank.fhc.models import Quotations, QuotationsVote
 from moerank.fhc.serializers.quotations import QuotationsSerializer, QuotationsListSerializer, RandomQuotationsListSerializer
-from moerank.common.custom import CommonPagination, TreeAPIView, RbacPermission, IsListOrIsAuthenticated, IsCreateOrIsAuthenticated, VotePostThrottle, IsRetrieveOrIsAuthenticated
+from moerank.common.custom import CommonPagination, TreeAPIView, RbacPermission, IsListOrIsAuthenticated, IsCreateOrIsAuthenticated, VotePostThrottle, IsRetrieveOrIsAuthenticated, csrf
 from rest_framework.filters import SearchFilter, OrderingFilter
 import base64
 from rest_framework.response import Response
@@ -13,6 +13,8 @@ from moerank.common.tasks import notice, vote
 import random
 from rest_framework import viewsets
 from django.shortcuts import get_object_or_404
+from rest_framework.authentication import SessionAuthentication, BasicAuthentication,TokenAuthentication
+
 
 class QuotationsViewSet(ModelViewSet):
     pagination_class = CommonPagination
@@ -23,6 +25,7 @@ class QuotationsViewSet(ModelViewSet):
     perms_map = ({'*': 'admin'}, {'*': 'quotations_all'}, {'get': 'quotations_list'}, {'post': 'quotations_create'}, {'put': 'quotations_edit'},
                  {'delete': 'quotations_delete'})
     permission_classes = (RbacPermission,)
+    authentication_classes = (csrf, SessionAuthentication, BasicAuthentication,TokenAuthentication)
 
     def get_serializer_class(self):
         if self.action == 'create':

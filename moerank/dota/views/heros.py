@@ -46,7 +46,7 @@ class GetWinRateViewSet(viewsets.ViewSet):
         }
 
         if not rank_url:
-            with open('/home/moeback/moerank/common/key.json', 'r') as f:
+            with open('/home/moe_back/moerank/common/key.json', 'r') as f:
                 json_data = json.load(f)
 
             url = json_data['winrate_url']
